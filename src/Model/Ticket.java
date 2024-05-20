@@ -8,7 +8,7 @@ public class Ticket {
     private Project project;
     private String description;
     private int hurry;
-    private  Timestamp creationDate;
+    private Timestamp creationDate;
     private boolean solved;
     private float timeUsed;
 
@@ -16,7 +16,18 @@ public class Ticket {
 
     }
 
-    public Ticket(Long id, String title, Project project, String description, int hurry, Timestamp creationDate, boolean solved, float timeUsed) {
+    public Ticket(Long id, String title, Project project, String description, int hurry, boolean solved, float timeUsed) {
+        this.id = id;
+        this.title = title;
+        this.project = project;
+        this.description = description;
+        this.hurry = hurry;
+        this.creationDate = new Timestamp(System.currentTimeMillis());
+        this.solved = solved;
+        this.timeUsed = timeUsed;
+    }
+
+    public Ticket(Long id, String title, Project project, String description, int hurry, Timestamp creationDate,boolean solved, float timeUsed) {
         this.id = id;
         this.title = title;
         this.project = project;
@@ -89,5 +100,18 @@ public class Ticket {
 
     public void setTimeUsed(float timeUsed) {
         this.timeUsed = timeUsed;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", hurry=" + hurry +
+                ", creationDate=" + creationDate +
+                ", solved=" + solved +
+                ", timeUsed=" + timeUsed +
+                '}';
     }
 }

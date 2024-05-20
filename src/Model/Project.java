@@ -7,7 +7,7 @@ public class Project {
     private String name;
     private ArrayList<Ticket> tickets;
 
-    public Project(Long id, String name, ArrayList<Ticket> tickets) {
+    public Project(Long id, String name) {
         this.id = id;
         this.name = name;
         this.tickets = tickets;
