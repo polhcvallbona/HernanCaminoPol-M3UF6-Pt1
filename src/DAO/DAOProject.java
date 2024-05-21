@@ -20,7 +20,7 @@ public class DAOProject {
             stmt.executeUpdate();
             stmt.close();
         } catch (SQLException e) {
-            System.out.println("Peta al borrar Project;");
+            System.out.println("Couldn't delete project structure!");
         }
     }
 
@@ -35,7 +35,7 @@ public class DAOProject {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (SQLException e) {
-            System.out.println("Peta al crear Project;");
+            System.out.println("Couldn't create structure for project!");
         }
     }
 
@@ -58,32 +58,28 @@ public class DAOProject {
                     System.out.println("Project Name too long.");
                     break;
             }
+        }finally{
+            System.out.println("Added successfully project with id "+p.getId());
         }
 
 
     }
 
-    public void updateProject(Ticket t){
-        String sql = "UPDATE Ticket SET title = ?, projectId = ?, description = ?, hurry = ?, solved = ?, timeUsed = ? WHERE id = ?";
+    public void updateProject(Project p){
+        String sql = "UPDATE Project SET name = ? WHERE id = ?;";
         Connection conn = ConnectionHandler.getConnection();
         PreparedStatement stmt = null;
         DAOProject dp = new DAOProject();
         try{
-            if(!dp.projectExists(t.getProject().getId())) throw new FKException("This project doesn't exists in the database. Project id: "+t.getProject().getId());
             stmt = conn.prepareStatement(sql);
-            stmt.setLong(7, t.getId());
-            stmt.setString(1, t.getTitle());
-            stmt.setLong(2,t.getProject().getId());
-            stmt.setString(3,t.getDescription());
-            stmt.setInt(4,t.getHurry());
-            stmt.setBoolean(5,t.isSolved());
-            stmt.setFloat(6,t.getTimeUsed());
+            stmt.setString(1,p.getName());
+            stmt.setLong(2,p.getId());
             stmt.executeUpdate();
             stmt.close();
         }catch (SQLException e){
             e.printStackTrace();
-        }catch(FKException e){
-            System.out.println(e.getMessage());
+        }finally {
+            System.out.println("Succesfully updated project with id "+p.getId());
         }
     }
 

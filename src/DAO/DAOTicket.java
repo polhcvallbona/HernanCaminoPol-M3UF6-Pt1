@@ -81,6 +81,8 @@ public class DAOTicket {
             }
         }catch(FKException e){
             System.out.println(e.getMessage());
+        }finally {
+            System.out.println("Ticket with id "+t.getId()+" has been added.");
         }
 
 
@@ -89,8 +91,10 @@ public class DAOTicket {
     public void updateTicket(Ticket t){
         String sql = "UPDATE Ticket SET title = ?, projectId = ?, description = ?, hurry = ?, solved = ?, timeUsed = ? WHERE id = ?";
         Connection conn = ConnectionHandler.getConnection();
+        boolean someWrong = false;
         PreparedStatement stmt = null;
         DAOProject dp = new DAOProject();
+        System.out.println("Actualitzant ticket amb id "+t.getId());
         try{
             if(!dp.projectExists(t.getProject().getId())) throw new FKException("This project doesn't exists in the database. Project id: "+t.getProject().getId());
             if(!ticketExists(t.getId())) throw new PKException("The key shouldn't be updated. Ticket id: "+t.getId());
@@ -106,8 +110,14 @@ public class DAOTicket {
             stmt.close();
         }catch (SQLException e){
             e.printStackTrace();
+            someWrong = true;
+            return;
         }catch(FKException | PKException e){
             System.out.println(e.getMessage());
+            someWrong = true;
+            return;
+        }finally{
+            if(!someWrong) System.out.println("Ticket with id "+t.getId()+" updated successfully!");
         }
     }
 
@@ -131,7 +141,7 @@ public class DAOTicket {
 
     public ArrayList<Ticket> getTickets(){
         String sql = "SELECT * FROM Ticket ORDER BY id;";
-        System.out.println(sql);
+        System.out.println("All tickets ordered by id.");
         Connection conn = ConnectionHandler.getConnection();
         ArrayList<Ticket> tickets = new ArrayList<>();
         PreparedStatement stmt = null;
@@ -159,7 +169,7 @@ public class DAOTicket {
 
     public ArrayList<Ticket> getTicketsByProjectId(Long cat){
         String sql = "SELECT * FROM Ticket WHERE projectId = ? ORDER BY id;";
-        System.out.println(sql);
+        System.out.println("All tickets from project with id "+cat);
         Connection conn = ConnectionHandler.getConnection();
         ArrayList<Ticket> tickets = new ArrayList<>();
         PreparedStatement stmt = null;
@@ -192,7 +202,7 @@ public class DAOTicket {
 
     public Ticket getTicketById(Long id){
         String sql = "SELECT * FROM Ticket WHERE id = ? ORDER BY id;";
-        System.out.println(sql);
+        System.out.println("Getting ticket with id "+id);
         Connection conn = ConnectionHandler.getConnection();
         ArrayList<Ticket> tickets = new ArrayList<>();
         PreparedStatement stmt = null;
@@ -239,7 +249,7 @@ public class DAOTicket {
         }else{
             sql = "SELECT * FROM Ticket ORDER BY ? asc;";
         }
-        System.out.println(sql);
+        System.out.println("Getting tickets ordered by "+orderBy+" in "+(desc ? "descendant" : "ascendant")+" order ");
         Connection conn = ConnectionHandler.getConnection();
         ArrayList<Ticket> tickets = new ArrayList<>();
         PreparedStatement stmt = null;
@@ -286,5 +296,27 @@ public class DAOTicket {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void printTimeUsed(){
+        String sql = "SELECT sum(t.timeUsed) as a, p.name as b FROM Ticket t\n" +
+                "\tRIGHT JOIN Project p ON p.id = t.projectId\n" +
+                "    GROUP BY t.projectId, p.name;";
+        System.out.println("Printing time used for tickets.\n");
+        Connection conn = ConnectionHandler.getConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try{
+            float total = 0f;
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                System.out.printf("Project: %s --> Time used: %.2f\n",rs.getString("b"),rs.getFloat("a"));
+                total += rs.getFloat("a");
+            }
+            System.out.println("Total: "+total+"\n");
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 }

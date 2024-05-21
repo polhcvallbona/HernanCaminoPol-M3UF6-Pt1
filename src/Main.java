@@ -24,9 +24,10 @@ public class Main {
         Project p4 = new Project(4l, "Windows Server Active Directory");
         dp.addProject(p4);
         Project p5 = new Project(5l, "Hardware");
-        dp.addProject(p5);
-
+        //dp.addProject(p5);
+        System.out.println();
         Ticket t1 = new Ticket(1l,"Backend API failing",p1,"The backend API is not working when i update a ticket",7,false,0f);
+        dt.addTicket(t1);
         dt.addTicket(t1);
         Ticket t2 = new Ticket(2l,"Backend Server Stopped",p1,"The backend server stopped due an error.",8,true,0.2f);
         dt.addTicket(t2);
@@ -36,28 +37,36 @@ public class Main {
         dt.addTicket(t4);
         Ticket t5 = new Ticket(5l,"Shared Desktop is not working.",p4,"I can't access to my shared desktop service since last update on the DC AC.",9,true,0.25f);
         dt.addTicket(t5);
+        System.out.println();
 
         t1.setDescription("No se de que era asi que no se que poner de descricion.");
         dt.updateTicket(t1);
+        System.out.println();
 
-        // dt.deleteTicket(1l);
+        t1.setProject(p5);
+        dt.updateTicket(t1);
+        System.out.println();
 
         for (Ticket t : dt.getTickets()){
             System.out.println(t);
         }
-
+        System.out.println();
         for (Ticket t : dt.getTicketsByProjectId(1l)){
             System.out.println(t);
         }
-
+        System.out.println();
         for (Ticket t : dt.getTicketsByProject(p1)){
             System.out.println(t);
         }
-
-        for (Ticket t : dt.getTicketsOrderedBy("title",true)){
+        System.out.println();
+        for (Ticket t : dt.getTicketsOrderedBy("description",false)){
             System.out.println(t);
         }
-
+        System.out.println();
         System.out.println(dt.getTicketById(11l));
+        System.out.println();
+        System.out.println(dt.getTicketById(3l));
+        System.out.println();
+        dt.printTimeUsed();
     }
 }

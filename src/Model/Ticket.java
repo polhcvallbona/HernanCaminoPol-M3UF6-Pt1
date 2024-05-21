@@ -104,14 +104,14 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return "Ticket{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", hurry=" + hurry +
-                ", creationDate=" + creationDate +
-                ", solved=" + solved +
-                ", timeUsed=" + timeUsed +
-                '}';
+        return String.format("Ticket(%d){" +
+                "\n\tTitle: %s" +
+                "\n\tDescription: %s" +
+                "\n\tHurry: %d" +
+                "\n\tCreation Date: %s," +
+                "\n\tSolved: %b" +
+                "\n\tTime Used: %.2f" +
+                "\n}",this.id,this.title,this.description,this.hurry,
+                this.creationDate.toString(),this.solved,this.timeUsed);
     }
 }
